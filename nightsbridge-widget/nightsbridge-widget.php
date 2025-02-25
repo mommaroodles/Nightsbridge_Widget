@@ -52,11 +52,6 @@ add_action('plugins_loaded', 'nightsbridge_widget_init');
 add_action( 'admin_init', 'nb_debug_settings' );
 add_action( 'wp_head', 'nb_debug_settings' ); */ // Logs on frontend too
 
-// Load text domain for translations
-add_action('plugins_loaded', function() {
-    load_plugin_textdomain('nightsbridge', false, dirname(plugin_basename(__FILE__)) . '/languages/');
-});
-
 // Cleanup on uninstall
 register_uninstall_hook(__FILE__, 'nb_uninstall');
 function nb_uninstall() {
