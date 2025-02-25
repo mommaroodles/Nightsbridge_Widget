@@ -42,6 +42,10 @@ function nightsbridge_widget_init() {
 }
 add_action('plugins_loaded', 'nightsbridge_widget_init');
 
+
+/**
+ * for debugging purposes
+ */
 /* function nb_debug_settings() {
     $options = get_option( 'nb_settings', array() );
     error_log( 'Current nb_settings: ' . print_r( $options, true ) );
@@ -50,7 +54,8 @@ add_action('plugins_loaded', 'nightsbridge_widget_init');
     }
 }
 add_action( 'admin_init', 'nb_debug_settings' );
-add_action( 'wp_head', 'nb_debug_settings' ); */ // Logs on frontend too
+add_action( 'wp_head', 'nb_debug_settings' ); */  // Logs on frontend too
+
 
 // Cleanup on uninstall
 register_uninstall_hook(__FILE__, 'nb_uninstall');
