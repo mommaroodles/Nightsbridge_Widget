@@ -44,7 +44,7 @@ add_action('plugins_loaded', 'nightsbridge_widget_init');
 
 
 /**
- * for debugging purposes
+ * Uncomment Block for Debugging Purposes
  */
 /* function nb_debug_settings() {
     $options = get_option( 'nb_settings', array() );
