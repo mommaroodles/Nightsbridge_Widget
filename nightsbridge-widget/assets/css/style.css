@@ -49,7 +49,7 @@ div#availability_section {
 	border-radius: 50%;
 	display: block;
 	border: 2px solid #ca0000;
-	padding: 5px 8px;
+	margin: 8px 8px;
 }
 
 .close-btn:focus, .close-btn:hover {
