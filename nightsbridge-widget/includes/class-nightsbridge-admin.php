@@ -407,7 +407,7 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_primary_color']) ? sanitize_hex_color($options['nb_primary_color']) : '#000000';
     ?>
-        <input type="text" name="nb_settings[nb_primary_color]" value="<?php echo esc_attr($value); ?>" class="nb-color-picker">
+        <input type="text" name="nb_settings[nb_primary_color]" value="<?php echo esc_attr($value); ?>" class="nbw-color-picker">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
@@ -432,7 +432,7 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_button_text_color']) ? sanitize_hex_color($options['nb_button_text_color']) : '#ffffff';
     ?>
-        <input type="text" name="nb_settings[nb_button_text_color]" value="<?php echo esc_attr($value); ?>" class="nb-color-picker">
+        <input type="text" name="nb_settings[nb_button_text_color]" value="<?php echo esc_attr($value); ?>" class="nbw-color-picker">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
@@ -457,7 +457,7 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_button_hover_color']) ? sanitize_hex_color($options['nb_button_hover_color']) : '#b6cc6a';
     ?>
-        <input type="text" name="nb_settings[nb_button_hover_color]" value="<?php echo esc_attr($value); ?>" class="nb-color-picker">
+        <input type="text" name="nb_settings[nb_button_hover_color]" value="<?php echo esc_attr($value); ?>" class="nbw-color-picker">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
