@@ -1,19 +1,20 @@
 <?php
+/**
+ * Class Nightsbridge_Admin
+ *
+ * Handles the administration functionality of the Nightsbridge Widget plugin.
+ */
 
 defined('ABSPATH') || exit;
 
 class Nightsbridge_Admin
 {
-    /**
-     * Constructor for the admin class. Calls init_hooks to set up actions and filters.
-     *
-     * @return void
-     */
+    
     public function __construct()
     {
         $this->init_hooks();
     }
-
+    
     /**
      * Set up hooks and filters for the admin interface.
      *
@@ -33,8 +34,8 @@ class Nightsbridge_Admin
         add_action('admin_init', array($this, 'nb_settings_init'));
         add_action('admin_notices', array($this, 'nb_admin_notices'));
     }
-
-
+    
+    
     /**
      * Enqueue scripts and styles for the admin interface, only if the hook suffix
      * matches the plugin settings page.
@@ -48,18 +49,18 @@ class Nightsbridge_Admin
         //error_log('Hook suffix: ' . $hook_suffix);
         if ($hook_suffix === 'settings_page_nb_settings') {
             //error_log('Enqueuing for settings_page_nb_settings');
-
+            
             $base_url = NIGHTSBRIDGE_PLUGIN_URL;
             $color_picker_url = $base_url . 'assets/js/nb-color-picker.js';
             $copy_url = $base_url . 'assets/js/nb-copy-to-clipboard.js';
             $style_url = $base_url . 'assets/css/admin-style.css';
-
+            
             //error_log('Color picker URL: ' . $color_picker_url);
             //error_log('Copy URL: ' . $copy_url);
             //error_log('Style URL: ' . $style_url);
             
             //wp_script_is() prevents multiple enqueues within this method. If duplicates persist, they’re from elsewhere
-
+            
             if (!wp_script_is('nb-copy-to-clipboard', 'enqueued')) {
                 wp_enqueue_script('nb-copy-to-clipboard', $copy_url, array('jquery'), NIGHTSBRIDGE_VERSION, true);
             }
@@ -72,13 +73,13 @@ class Nightsbridge_Admin
             if (!wp_style_is('nb-admin-style', 'enqueued')) {
                 wp_enqueue_style('nb-admin-style', $style_url, array(), NIGHTSBRIDGE_VERSION);
             }
-
+            
             //error_log('Scripts and styles enqueued successfully');
         } //else {
         //error_log('Not enqueuing - wrong page: ' . $hook_suffix);
         //}
     }
-
+    
     /**
      * Add a menu item for the plugin settings page, under the "Settings" menu.
      *
@@ -88,117 +89,117 @@ class Nightsbridge_Admin
     {
         if (current_user_can('manage_options')) {
             add_options_page(
-                __('NightsBridge Booking Widget Settings', 'nightsbridge'),
-                __('NightsBridge', 'nightsbridge'),
-                'manage_options',
-                'nb_settings',
-                array($this, 'options_page')
-            );
+                    __('NightsBridge Booking Widget Settings', 'nightsbridge'),
+                    __('NightsBridge', 'nightsbridge'),
+                    'manage_options',
+                    'nb_settings',
+                    array($this, 'options_page')
+                    );
         }
     }
-
+    
     /**
      * Initialize the plugin settings by registering a setting and adding settings
      * fields and sections to the plugin settings page.
      *
      * @return void
      */
-
+    
     public function nb_settings_init()
     {
         register_setting('nb_settings_group', 'nb_settings', array(
-            'sanitize_callback' => array($this, 'nb_sanitize_settings')
+                'sanitize_callback' => array($this, 'nb_sanitize_settings')
         ));
-
+        
         add_settings_section(
-            'nb_settings_section',
-            __('NightsBridge Widget Settings', 'nightsbridge'),
-            array($this, 'nb_settings_section_callback'),
-            'nb_settings_group'
-        );
-
+                'nb_settings_section',
+                __('NightsBridge Widget Settings', 'nightsbridge'),
+                array($this, 'nb_settings_section_callback'),
+                'nb_settings_group'
+                );
+        
         add_settings_field(
-            'nb_bbid',
-            __('NightsBridge ID (BBID)', 'nightsbridge'),
-            array($this, 'nb_bbid_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Connect your NightsBridge account (required)', 'nightsbridge'))
-        );
-
+                'nb_bbid',
+                __('NightsBridge ID (BBID)', 'nightsbridge'),
+                array($this, 'nb_bbid_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Connect your NightsBridge account (required)', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_custom_format',
-            __('Date Format', 'nightsbridge'),
-            array($this, 'nb_custom_format_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Custom date format (e.g., d-M-Y)', 'nightsbridge'))
-        );
-
+                'nb_custom_format',
+                __('Date Format', 'nightsbridge'),
+                array($this, 'nb_custom_format_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Custom date format (e.g., d-M-Y)', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_language',
-            __('Language', 'nightsbridge'),
-            array($this, 'nb_language_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Select widget language', 'nightsbridge'))
-        );
-
+                'nb_language',
+                __('Language', 'nightsbridge'),
+                array($this, 'nb_language_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Select widget language', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_page_slug',
-            __('Widget Page', 'nightsbridge'),
-            array($this, 'nb_page_slug_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Select the page where the widget will appear', 'nightsbridge'))
-        );
-
+                'nb_page_slug',
+                __('Widget Page', 'nightsbridge'),
+                array($this, 'nb_page_slug_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Select the page where the widget will appear', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_primary_color',
-            __('Primary Color', 'nightsbridge'),
-            array($this, 'nb_primary_color_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Select the primary color for the widget', 'nightsbridge'))
-        );
-
+                'nb_primary_color',
+                __('Primary Color', 'nightsbridge'),
+                array($this, 'nb_primary_color_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Select the primary color for the widget', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_button_text_color',
-            __('Button Text Color', 'nightsbridge'),
-            array($this, 'nb_button_text_color_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Select the text color for the button', 'nightsbridge'))
-        );
-
+                'nb_button_text_color',
+                __('Button Text Color', 'nightsbridge'),
+                array($this, 'nb_button_text_color_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Select the text color for the button', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_button_hover_color',
-            __('Button Hover Color', 'nightsbridge'),
-            array($this, 'nb_button_hover_color_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Select the hover background color for the button', 'nightsbridge'))
-        );
-
+                'nb_button_hover_color',
+                __('Button Hover Color', 'nightsbridge'),
+                array($this, 'nb_button_hover_color_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Select the hover background color for the button', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_button_border_radius',
-            __('Button Border Radius', 'nightsbridge'),
-            array($this, 'nb_button_border_radius_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Specify the border radius for the button in pixels or % (e.g., 4px, 2%)', 'nightsbridge'))
-        );
-
+                'nb_button_border_radius',
+                __('Button Border Radius', 'nightsbridge'),
+                array($this, 'nb_button_border_radius_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Specify the border radius for the button in pixels or % (e.g., 4px, 2%)', 'nightsbridge'))
+                );
+        
         add_settings_field(
-            'nb_button_text',
-            __('Button Text', 'nightsbridge'),
-            array($this, 'nb_button_text_render'),
-            'nb_settings_group',
-            'nb_settings_section',
-            array('description' => __('Specify the text for the button e.g Book Now / Check Availability', 'nightsbridge'))
-        );
+                'nb_button_text',
+                __('Button Text', 'nightsbridge'),
+                array($this, 'nb_button_text_render'),
+                'nb_settings_group',
+                'nb_settings_section',
+                array('description' => __('Specify the text for the button e.g Book Now / Check Availability', 'nightsbridge'))
+                );
     }
-
+    
     /**
      * Display warning notices in the WordPress admin area if the Booking ID (BBID)
      * or page slug for the widget is missing or null.
@@ -212,43 +213,43 @@ class Nightsbridge_Admin
     {
         $options = get_option('nb_settings', array()); // Default to empty array if option doesn't exist
         $screen = get_current_screen();
-
+        
         // Only show notices on the plugin's settings page
         if (! $screen || $screen->id !== 'settings_page_nb_settings') {
             return;
         }
-
+        
         // Define notices with conditions
         $notices = array(
-            array(
-                'condition' => isset($options['nb_bbid']) && empty($options['nb_bbid']),
-                'message'   => __('NightsBridge Widget: Please enter your NightsBridge Booking ID (BBID).', 'nightsbridge'),
-                'type'      => 'warning',
-            ),
-            array(
-                'condition' => isset($options['nb_page_slug']) && empty($options['nb_page_slug']),
-                'message'   => __('NightsBridge Widget: Please select a page for the widget.', 'nightsbridge'),
-                'type'      => 'warning',
-            ),
-            array(
-                'condition' => isset($options['nb_page_slug']) && $options['nb_page_slug'] === null,
-                'message'   => __('NightsBridge Widget: The page slug for the widget is null.', 'nightsbridge'),
-                'type'      => 'error',
-            ),
+                array(
+                        'condition' => isset($options['nb_bbid']) && empty($options['nb_bbid']),
+                        'message'   => __('NightsBridge Widget: Please enter your NightsBridge Booking ID (BBID).', 'nightsbridge'),
+                        'type'      => 'warning',
+                ),
+                array(
+                        'condition' => isset($options['nb_page_slug']) && empty($options['nb_page_slug']),
+                        'message'   => __('NightsBridge Widget: Please select a page for the widget.', 'nightsbridge'),
+                        'type'      => 'warning',
+                ),
+                array(
+                        'condition' => isset($options['nb_page_slug']) && $options['nb_page_slug'] === null,
+                        'message'   => __('NightsBridge Widget: The page slug for the widget is null.', 'nightsbridge'),
+                        'type'      => 'error',
+                ),
         );
-
+        
         // Output notices
         foreach ($notices as $notice) {
             if ($notice['condition']) {
                 printf(
-                    '<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
-                    esc_attr($notice['type']),
-                    esc_html($notice['message'])
-                );
+                        '<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
+                        esc_attr($notice['type']),
+                        esc_html($notice['message'])
+                        );
             }
         }
     }
-
+    
     /**
      * Displays the options page for the NightsBridge Widget plugin.
      *
@@ -262,7 +263,7 @@ class Nightsbridge_Admin
      */
     public function options_page()
     {
-?>
+        ?>
         <div class="wrap">
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
             <form action="options.php" method="post">
