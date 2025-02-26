@@ -1,3 +1,3 @@
 jQuery(document).ready(function($) {
-    $('.nbw-color-picker').wpColorPicker();
+    $('.nb-color-picker').wpColorPicker();
 });
