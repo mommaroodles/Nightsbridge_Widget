@@ -53,7 +53,7 @@ div#availability_section {
 }
 
 .close-btn:focus, .close-btn:hover {
-	color: #000;
+	color: #363636;
 	text-decoration: none;
 	background: #fff;
 	border: 2px solid #363636
@@ -199,7 +199,7 @@ input {
     gap: 10px;
 }
 .nightsbridge-widget .nb_btn {
-    background-color: #000; /* Fallback */
+    background-color: var(--nb-primary-color); /* Fallback */
     color: #fff;
     padding: 10px;
     border-radius: 4px;
