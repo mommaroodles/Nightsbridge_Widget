@@ -49,10 +49,10 @@ class Nightsbridge_Admin
         if ($hook_suffix === 'settings_page_nb_settings') {
             //error_log('Enqueuing for settings_page_nb_settings');
 
-            //$base_url = NIGHTSBRIDGE_PLUGIN_URL;
-            //$color_picker_url = $base_url . 'assets/js/nb-color-picker.js';
-            //$copy_url = $base_url . 'assets/js/nb-copy-to-clipboard.js';
-            //$style_url = $base_url . 'assets/css/admin-style.css';
+            $base_url = NIGHTSBRIDGE_PLUGIN_URL;
+            $color_picker_url = $base_url . 'assets/js/nb-color-picker.js';
+            $copy_url = $base_url . 'assets/js/nb-copy-to-clipboard.js';
+            $style_url = $base_url . 'assets/css/admin-style.css';
 
             //error_log('Color picker URL: ' . $color_picker_url);
             //error_log('Copy URL: ' . $copy_url);
@@ -186,7 +186,7 @@ class Nightsbridge_Admin
             array($this, 'nb_button_border_radius_render'),
             'nb_settings_group',
             'nb_settings_section',
-            array('description' => __('Specify the border radius for the button in px or % (e.g., 4px, 2%)', 'nightsbridge'))
+            array('description' => __('Specify the border radius for the button in pixels or % (e.g., 4px, 2%)', 'nightsbridge'))
         );
 
         add_settings_field(
@@ -195,7 +195,7 @@ class Nightsbridge_Admin
             array($this, 'nb_button_text_render'),
             'nb_settings_group',
             'nb_settings_section',
-            array('description' => __('Specify the text for the button', 'nightsbridge'))
+            array('description' => __('Specify the text for the button e.g Book Now / Check Availability', 'nightsbridge'))
         );
     }
 
@@ -307,7 +307,9 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_custom_format']) ? esc_attr($options['nb_custom_format']) : 'd-M-Y';
     ?>
-        <input type="text" name="nb_settings[nb_custom_format]" value="<?php echo esc_attr($value); ?>">
+   <!-- <input type="text" name="nb_settings[nb_custom_format]" value="<?php //echo esc_attr($value); ?>"> -->
+      
+        <input type="text" name="nb_settings[nb_custom_format]" value="<?php echo $value; ?>">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
@@ -407,7 +409,7 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_primary_color']) ? sanitize_hex_color($options['nb_primary_color']) : '#000000';
     ?>
-        <input type="text" name="nb_settings[nb_primary_color]" value="<?php echo esc_attr($value); ?>" class="nbw-color-picker">
+        <input type="text" name="nb_settings[nb_primary_color]" value="<?php echo esc_attr($value); ?>" class="nb-color-picker">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
@@ -432,7 +434,7 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_button_text_color']) ? sanitize_hex_color($options['nb_button_text_color']) : '#ffffff';
     ?>
-        <input type="text" name="nb_settings[nb_button_text_color]" value="<?php echo esc_attr($value); ?>" class="nbw-color-picker">
+        <input type="text" name="nb_settings[nb_button_text_color]" value="<?php echo esc_attr($value); ?>" class="nb-color-picker">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
@@ -457,7 +459,7 @@ class Nightsbridge_Admin
         $options = get_option('nb_settings');
         $value = isset($options['nb_button_hover_color']) ? sanitize_hex_color($options['nb_button_hover_color']) : '#b6cc6a';
     ?>
-        <input type="text" name="nb_settings[nb_button_hover_color]" value="<?php echo esc_attr($value); ?>" class="nbw-color-picker">
+        <input type="text" name="nb_settings[nb_button_hover_color]" value="<?php echo esc_attr($value); ?>" class="nb-color-picker">
         <p class="description"><?php echo esc_html($args['description']); ?></p>
     <?php
     }
