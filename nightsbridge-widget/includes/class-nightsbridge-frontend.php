@@ -109,6 +109,44 @@ class Nightsbridge_Frontend {
         <?php
         return ob_get_clean();
     }
+    
+    /**
+     * Apply custom styles to the frontend based on plugin settings.
+     */
+    public function nb_apply_custom_styles() {
+        $options = get_option( 'nb_settings' );
+        if ( $options === false ) {
+            // Log the error and provide a user-friendly message
+            error_log( 'Failed to retrieve plugin settings.' );
+            echo '<p class="nb-error">' . esc_html__( 'Failed to retrieve plugin settings. Please check the plugin configuration.', 'nightsbridge' ) . '</p>';
+            return;
+        }
+        
+        $primary_color = !empty( $options['nb_primary_color'] ) ? sanitize_hex_color( $options['nb_primary_color'] ) : '#000000';
+        $button_text_color = !empty( $options['nb_button_text_color'] ) ? sanitize_hex_color( $options['nb_button_text_color'] ) : '#ffffff';
+        $button_hover_color = !empty( $options['nb_button_hover_color'] ) ? sanitize_hex_color( $options['nb_button_hover_color'] ) : '#b6cc6a';
+        $button_border_radius = !empty( $options['nb_button_border_radius'] ) ? sanitize_text_field( $options['nb_button_border_radius'] ) : '';
+        $button_text = !empty( $options['nb_button_text'] ) ? sanitize_text_field( $options['nb_button_text'] ) : 'Check Availability';
+        ?>
+            <style type="text/css">
+                :root {
+                    --nb-primary-color: <?php echo esc_attr( $primary_color ); ?>;
+                    --nb-button-text-color: <?php echo esc_attr( $button_text_color ); ?>;
+                    --nb-button-hover-color: <?php echo esc_attr( $button_hover_color ); ?>;
+                    --nb-button-border-radius: <?php echo esc_attr( $button_border_radius ); ?>;
+                }
+                .nb_btn {
+                    background-color: var(--nb-primary-color);
+                    color: var(--nb-button-text-color) !important;
+                    border-radius: var(--nb-button-border-radius);
+                }
+                .nb_btn:hover {
+                    background-color: var(--nb-button-hover-color);
+                    color: var(--nb-button-text-color) !important;
+                }
+            </style>
+           <?php
+    }
 
     /**
      * Shortcode to display the availability check widget.
@@ -134,8 +172,8 @@ public function nb_availability_check_shortcode() {
     if ( empty( $bbid ) ) {
         //error_log( "NightsBridge: nb_availability_check - No BBID, showing error." );
         echo '<p class="nb-error">' . esc_html__( 'Please set a NightsBridge Booking ID in the plugin settings.', 'nightsbridge' ) . '</p>';
-//     } else {
-//         //error_log( "NightsBridge: nb_availability_check - Rendering HTML for Post ID: " . ( $post ? $post->ID : 'none' ) );
+    } else {
+        //error_log( "NightsBridge: nb_availability_check - Rendering HTML for Post ID: " . ( $post ? $post->ID : 'none' ) );
         ?>
         <div class="nightsbridge-widget">
             <br><br>
@@ -168,7 +206,7 @@ public function nb_availability_check_shortcode() {
             <br>
             <div id="availabilityModal" class="modal">
                 <div class="modal-content">
-                    <span class="close-btn">×</span>
+                    <span class="close-btn">X</span>
                     <iframe id="availabilityIframe" src="" style="width: 100%; height: 800px; border: none;"></iframe>
                 </div>
             </div>
@@ -190,41 +228,5 @@ public function nb_availability_check_shortcode() {
  } );
  */
 
-    /**
-     * Apply custom styles to the frontend based on plugin settings.
-     */
-    public function nb_apply_custom_styles() {
-        $options = get_option( 'nb_settings' );
-        if ( $options === false ) {
-            // Log the error and provide a user-friendly message
-            error_log( 'Failed to retrieve plugin settings.' );
-            echo '<p class="nb-error">' . esc_html__( 'Failed to retrieve plugin settings. Please check the plugin configuration.', 'nightsbridge' ) . '</p>';
-            return;
-        }
 
-            $primary_color = !empty( $options['nb_primary_color'] ) ? sanitize_hex_color( $options['nb_primary_color'] ) : '#000000';
-            $button_text_color = !empty( $options['nb_button_text_color'] ) ? sanitize_hex_color( $options['nb_button_text_color'] ) : '#ffffff';
-            $button_hover_color = !empty( $options['nb_button_hover_color'] ) ? sanitize_hex_color( $options['nb_button_hover_color'] ) : '#b6cc6a';
-            $button_border_radius = !empty( $options['nb_button_border_radius'] ) ? sanitize_text_field( $options['nb_button_border_radius'] ) : '';
-            $button_text = !empty( $options['nb_button_text'] ) ? sanitize_text_field( $options['nb_button_text'] ) : 'Check Availability';
-            ?>
-            <style type="text/css">
-                :root {
-                    --nb-primary-color: <?php echo esc_attr( $primary_color ); ?>;
-                    --nb-button-text-color: <?php echo esc_attr( $button_text_color ); ?>;
-                    --nb-button-hover-color: <?php echo esc_attr( $button_hover_color ); ?>;
-                    --nb-button-border-radius: <?php echo esc_attr( $button_border_radius ); ?>;
-                }
-                .nb_btn {
-                    background-color: var(--nb-primary-color);
-                    color: var(--nb-button-text-color) !important;
-                    border-radius: var(--nb-button-border-radius);
-                }
-                .nb_btn:hover {
-                    background-color: var(--nb-button-hover-color);
-                    color: var(--nb-button-text-color) !important;
-                }
-            </style>
-           <?php
-    }
 }
